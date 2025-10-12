@@ -1,0 +1,118 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.2.0.json",
+  "title": "GDP per Capita vs Life Expectancy",
+  "width": 800,
+  "height": 400,
+  "data": {
+    "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_countries_gdp_per_capita.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {
+      "fold": [
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018",
+        "2019",
+        "2020"
+      ],
+      "as": ["year", "gdp"]
+    },
+    {"filter": "datum.year == yearSelector"},
+    {
+      "lookup": "Country Name",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_countries_life_expectancy.csv",
+          "format": {"type": "csv"}
+        },
+        "key": "Country Name",
+        "fields": [
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020"
+        ]
+      }
+    },
+    {"calculate": "datum[yearSelector]", "as": "life_expectancy"},
+    {"filter": "datum.gdp != null && datum.life_expectancy != null"}
+  ],
+  "params": [
+    {
+      "name": "yearSelector",
+      "value": "2020",
+      "bind": {
+        "input": "select",
+        "options": [
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020"
+        ],
+        "labels": [
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020"
+        ],
+        "name": "Select Year: "
+      }
+    }
+  ],
+  "mark": {"type": "circle", "opacity": 0.7},
+  "encoding": {
+    "x": {
+      "field": "gdp",
+      "type": "quantitative",
+      "title": "GDP per Capita (USD)",
+      "scale": {"type": "log"}
+    },
+    "y": {
+      "field": "life_expectancy",
+      "type": "quantitative",
+      "title": "Life Expectancy (years)"
+    },
+    "size": {"field": "gdp", "type": "quantitative", "legend": null},
+    "color": {"field": "Country Name", "type": "nominal", "legend": null},
+    "tooltip": [
+      {"field": "Country Name", "type": "nominal", "title": "Country"},
+      {
+        "field": "gdp",
+        "type": "quantitative",
+        "title": "GDP per Capita",
+        "format": "$,.0f"
+      },
+      {
+        "field": "life_expectancy",
+        "type": "quantitative",
+        "title": "Life Expectancy",
+        "format": ".1f"
+      }
+    ]
+  },
+  "config": {"background": "white"}
+}
