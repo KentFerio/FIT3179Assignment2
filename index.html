@@ -1,237 +1,282 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>World Data Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Life Expectancy Analysis</title>
+
+  <!-- Vega Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: white;
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --light-bg: #f8f9fa;
+      --border: #e0e0e0;
+      --text-muted: #7f8c8d;
     }
-    .dashboard {
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      color: var(--primary);
+      background: #fff;
       max-width: 1200px;
       margin: 0 auto;
+      padding: 30px 20px 60px 20px;
+      line-height: 1.6;
     }
-    .map-container {
-      width: 800px;
-      height: 400px;
+
+    header {
+      text-align: center;
+      padding-bottom: 20px;
+      margin-bottom: 40px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    section.intro {
+      background: var(--light-bg);
+      border-left: 5px solid var(--secondary);
+      padding: 25px 30px;
+      border-radius: 8px;
+      margin-bottom: 50px;
+    }
+
+    section.intro h2 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+    }
+
+    section h2 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .vis-container {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .vis-large {
+      height: 500px;
+      margin-bottom: 50px;
+    }
+
+    .vis-medium {
+      height: 420px;
+    }
+
+    .split {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .split .column:first-child {
+      flex: 1.5;
+      min-width: 400px;
+    }
+
+    .split .column:last-child {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .analysis-box {
+      background: var(--light-bg);
+      border-radius: 8px;
+      padding: 25px 30px;
+      line-height: 1.7;
+      flex-shrink: 0;
+    }
+
+    .analysis-box h3 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 15px;
+      max-width: 400px;
+      line-height: 1.4;
+    }
+
+    .analysis-box ul {
+      list-style-type: disc;
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .analysis-box li {
+      margin-bottom: 8px;
+    }
+
+    section#australia {
+      margin-top: 80px;
+      background: #fdfefe;
+      border-top: 3px solid var(--secondary);
+      padding-top: 40px;
+    }
+
+    section#australia h2 {
+      color: var(--primary);
+      font-size: 1.7rem;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    section#australia p {
+      max-width: 800px;
       margin-bottom: 20px;
     }
-    .bottom-row {
-      display: flex;
-      gap: 20px;
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      border-top: 2px solid var(--border);
+      padding-top: 25px;
+      font-size: 0.9rem;
     }
-    .gdp-container {
-      width: 500px;
-      height: 300px;
-    }
-    .text-analysis {
-      width: 300px;
-      height: 300px;
-      background: #f9f9f9;
+
+    .data-sources {
+      background: var(--light-bg);
+      margin-top: 20px;
       padding: 20px;
       border-radius: 8px;
-      border: 1px solid #ddd;
     }
-    .text-analysis h3 {
-      margin-top: 0;
-      color: #333;
+
+    .data-sources h3 {
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--primary);
     }
-    .text-analysis ul {
-      padding-left: 20px;
-    }
-    .text-analysis li {
-      margin-bottom: 8px;
-      line-height: 1.4;
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+      header h1 {
+        font-size: 2rem;
+      }
+      section.intro {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Large Map on Top -->
-    <div class="map-container" id="map"></div>
-    
-    <!-- Bottom Row: GDP Scatter + Text Analysis -->
-    <div class="bottom-row">
-      <div class="gdp-container" id="gdp"></div>
-      <div class="text-analysis">
-        <h3>Data Analysis</h3>
-        <ul>
-          <li><strong>Strong Correlation:</strong> Higher GDP generally correlates with longer life expectancy</li>
-          <li><strong>Regional Patterns:</strong> Developed nations show both high GDP and long lifespans</li>
-          <li><strong>Developing Nations:</strong> Many countries cluster in lower-left quadrant</li>
-          <li><strong>Outliers Exist:</strong> Some achieve good health despite lower economic development</li>
-          <li><strong>Trends:</strong> Use year selector to see changes from 2011-2020</li>
-        </ul>
+  <header>
+    <h1>Australia’s Life Expectancy in a Global Context</h1>
+    <p>
+      This dashboard explores Australia’s life expectancy and health outcomes 
+      in comparison with global patterns. It begins with a worldwide overview 
+      before zooming in to examine differences across Australian states and territories.
+    </p>
+  </header>
+
+  <section class="intro">
+    <h2>Why Compare Australia with the World?</h2>
+    <p>
+      Australia consistently ranks among the countries with the highest life expectancy. 
+      Understanding how it compares to global averages helps highlight the factors that contribute 
+      to this strong performance — from economic growth to health system stability.
+    </p>
+  </section>
+
+  <section>
+    <h2>Global Life Expectancy Overview</h2>
+    <div class="vis-container vis-large" id="world-map"></div>
+  </section>
+
+  <section class="split">
+    <div class="column">
+      <h2>Global Economic Development vs Life Expectancy</h2>
+      <div class="vis-container vis-medium" id="gdp-scatter"></div>
+    </div>
+
+    <div class="column analysis-box">
+      <h3>Key Global Insights</h3>
+      <ul>
+        <li><strong>Positive Relationship:</strong> Countries with higher GDP per capita tend to have longer life expectancy.</li>
+        <li><strong>Australia’s Position:</strong> Australia sits high on both scales, reflecting strong healthcare and living standards.</li>
+        <li><strong>Regional Gaps:</strong> Developing regions in Africa and Asia still lag behind in health outcomes despite gradual improvements.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== AUSTRALIA SECTION ===== -->
+  <section id="australia">
+    <h2>Life Expectancy Across Australian States and Territories</h2>
+    <p>
+      The map and line chart below show life expectancy across Australian states and
+      territories. Use the year selector on the left to explore changes across the map,
+      and use the dropdown on the right to view detailed state trends or the national average.
+    </p>
+
+    <div class="split">
+      <div class="column">
+        <h3>Life Expectancy by State (Map)</h3>
+        <div class="vis-container vis-medium" id="australia-state-map"></div>
+      </div>
+
+      <div class="column">
+        <h3>Life Expectancy Trends (2011–2020)</h3>
+        <div class="vis-container vis-medium" id="australia-state-line"></div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ===== MEAN TEMPERATURE SECTION ===== -->
+  <section id="temperature">
+    <h2>Average Annual Temperature in Australia</h2>
+    <p>
+      This chart shows how Australia’s average annual temperature anomaly has changed 
+      since 1910, compared to the 1961–90 baseline. Rising anomalies highlight a clear 
+      warming trend in recent decades.
+    </p>
+    <div class="vis-container vis-large" id="australia-temp-vis"></div>
+  </section>
+
+  <footer>
+    <p>FIT3179 Data Visualisation 2 Assignment | Created by Kent Ferio | October 2025</p>
+  </footer>
 
   <script>
-    // Your original working Vega-Lite spec for the map
-    const mapSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v6.2.0.json",
-      "title": "Life Expectancy by Country",
-      "width": 800,
-      "height": 400,
-      "data": {
-        "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/ne_110m.json",
-        "format": {
-          "type": "topojson",
-          "feature": "ne_110m_admin_0_countries"
-        }
-      },
-      "transform": [
-        {
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_countries_life_expectancy.csv",
-              "format": {"type": "csv"}
-            },
-            "key": "Country Name",
-            "fields": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
-          }
-        },
-        {
-          "calculate": "datum[yearSelector]",
-          "as": "life_expectancy"
-        },
-        {
-          "filter": "datum.life_expectancy != null"
-        }
-      ],
-      "projection": {
-        "type": "naturalEarth1"
-      },
-      "mark": {
-        "type": "geoshape",
-        "stroke": "white",
-        "strokeWidth": 0.5
-      },
-      "encoding": {
-        "color": {
-          "field": "life_expectancy",
-          "type": "quantitative",
-          "scale": {"scheme": "blues"},
-          "title": "Life Expectancy"
-        },
-        "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "life_expectancy", "type": "quantitative", "title": "Life Expectancy", "format": ".1f"}
-        ]
-      },
-      "params": [
-        {
-          "name": "yearSelector",
-          "value": "2020",
-          "bind": {
-            "input": "select",
-            "options": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
-            "labels": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
-            "name": "Select Year: "
-          }
-        }
-      ],
-      "config": {
-        "view": {"stroke": "transparent"},
-        "background": "white"
-      }
-    };
-
-    // Your original working Vega-Lite spec for GDP scatter
-    const gdpSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v6.2.0.json",
-      "title": "GDP per Capita vs Life Expectancy",
-      "width": 500,
-      "height": 300,
-      "data": {
-        "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_countries_gdp_per_capita.csv",
-        "format": {"type": "csv"}
-      },
-      "transform": [
-        {
-          "fold": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
-          "as": ["year", "gdp"]
-        },
-        {
-          "filter": "datum.year == yearSelector"
-        },
-        {
-          "lookup": "Country Name",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_countries_life_expectancy.csv",
-              "format": {"type": "csv"}
-            },
-            "key": "Country Name",
-            "fields": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
-          }
-        },
-        {
-          "calculate": "datum[yearSelector]",
-          "as": "life_expectancy"
-        },
-        {
-          "filter": "datum.gdp != null && datum.life_expectancy != null"
-        }
-      ],
-      "mark": {
-        "type": "circle",
-        "opacity": 0.7
-      },
-      "encoding": {
-        "x": {
-          "field": "gdp",
-          "type": "quantitative",
-          "title": "GDP per Capita (USD)",
-          "scale": {"type": "log"}
-        },
-        "y": {
-          "field": "life_expectancy",
-          "type": "quantitative",
-          "title": "Life Expectancy (years)"
-        },
-        "size": {
-          "field": "gdp",
-          "type": "quantitative",
-          "legend": null
-        },
-        "color": {
-          "field": "Country Name",
-          "type": "nominal",
-          "legend": null
-        },
-        "tooltip": [
-          {"field": "Country Name", "type": "nominal", "title": "Country"},
-          {"field": "gdp", "type": "quantitative", "title": "GDP per Capita", "format": "$,.0f"},
-          {"field": "life_expectancy", "type": "quantitative", "title": "Life Expectancy", "format": ".1f"}
-        ]
-      },
-      "params": [
-        {
-          "name": "yearSelector",
-          "value": "2020",
-          "bind": {
-            "input": "select",
-            "options": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
-            "labels": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
-            "name": "Select Year: "
-          }
-        }
-      ],
-      "config": {
-        "background": "white"
-      }
-    };
-
-    // Embed both visualizations
-    vegaEmbed('#map', mapSpec);
-    vegaEmbed('#gdp', gdpSpec);
+    vegaEmbed("#world-map", "life_expectancy_map.json");
+    vegaEmbed("#gdp-scatter", "gdp_scatter_plot.json");
+    vegaEmbed("#australia-state-map", "states_life_expectancy.json");
+    vegaEmbed("#australia-state-line", "states_life_expectancy_line.json");
+    vegaEmbed("#australia-temp-vis", "australia_mean_temperature.json");
   </script>
+
+
+
 </body>
 </html>
