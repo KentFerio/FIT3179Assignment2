@@ -1,11 +1,13 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.2.0.json",
-  "title": "World Life Expectancy",
-  "width": 800,
-  "height": 500,
+  "width": "container",
+  "height": 445,
   "data": {
     "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/ne_110m.json",
-    "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+    "format": {
+      "type": "topojson",
+      "feature": "ne_110m_admin_0_countries"
+    }
   },
   "transform": [
     {
@@ -16,75 +18,51 @@
           "format": {"type": "csv"}
         },
         "key": "Country Name",
-        "fields": [
-          "2011",
-          "2012",
-          "2013",
-          "2014",
-          "2015",
-          "2016",
-          "2017",
-          "2018",
-          "2019",
-          "2020"
-        ]
+        "fields": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
       }
     },
-    {"calculate": "datum[yearSelector]", "as": "life_expectancy"},
-    {"filter": "datum.life_expectancy != null"}
+    {
+      "calculate": "datum[yearSelector]",
+      "as": "life_expectancy"
+    },
+    {
+      "filter": "datum.life_expectancy != null"
+    }
   ],
+  "projection": {
+    "type": "naturalEarth1"
+  },
   "params": [
     {
       "name": "yearSelector",
       "value": "2020",
       "bind": {
         "input": "select",
-        "options": [
-          "2011",
-          "2012",
-          "2013",
-          "2014",
-          "2015",
-          "2016",
-          "2017",
-          "2018",
-          "2019",
-          "2020"
-        ],
-        "labels": [
-          "2011",
-          "2012",
-          "2013",
-          "2014",
-          "2015",
-          "2016",
-          "2017",
-          "2018",
-          "2019",
-          "2020"
-        ],
+        "options": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
+        "labels": ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
         "name": "Select Year: "
       }
     }
   ],
-  "projection": {"type": "naturalEarth1"},
-  "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 0.5},
+  "mark": {
+    "type": "geoshape",
+    "stroke": "white",
+    "strokeWidth": 0.5
+  },
   "encoding": {
     "color": {
       "field": "life_expectancy",
       "type": "quantitative",
       "scale": {"scheme": "blues"},
-      "title": "Life Expectancy"
+      "title": "Life Expectancy (years)"
     },
     "tooltip": [
       {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-      {
-        "field": "life_expectancy",
-        "type": "quantitative",
-        "title": "Life Expectancy",
-        "format": ".1f"
-      }
+      {"field": "life_expectancy", "type": "quantitative", "title": "Life Expectancy", "format": ".1f"}
     ]
   },
-  "config": {"view": {"stroke": "transparent"}, "background": "white"}
+  "config": {
+    "view": {"stroke": "transparent"},
+    "background": "white"
+  }
 }
