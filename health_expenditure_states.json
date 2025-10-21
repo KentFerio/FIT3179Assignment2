@@ -76,7 +76,7 @@
     },
     "tooltip": [
       { "field": "State", "title": "State / Territory" },
-      { "field": "ExpenditureBillions", "title": "Expenditure ($B AUD)", "format": ".2f" },
+      { "field": "ExpenditureBillions", "title": "Expenditure ($Billion AUD)", "format": ".2f" },
       { "field": "Year", "title": "Year" }
     ]
   },
