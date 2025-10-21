@@ -89,7 +89,7 @@
           {"field": "Country Name", "title": "Country"},
           {"field": "Continent"},
           {"field": "gdp", "title": "GDP per Capita","format": "$,.0f"},
-          {"field": "life_expectancy", "title": "Life Expectancy (yrs)","format": ".1f"}
+          {"field": "life_expectancy", "title": "Life Expectancy (years)","format": ".1f"}
         ]
       }
     }
@@ -98,6 +98,6 @@
   "config": {
     "background": "white",
     "view": {"stroke": "transparent"},
-    "axis": {"domain": false, "gridColor": "#f0f0f0", "gridOpacity": 0.7}
+    "axis": {"domain": false, "gridColor": "lightgray", "gridOpacity": 0.7}
   }
 }
