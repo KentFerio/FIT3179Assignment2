@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Global Life Expectancy Analysis</title>
 
-  <!-- Vega Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
@@ -87,7 +86,7 @@
 
     .vis-large {
       height: 500px;
-      margin-bottom: 50px;
+      margin-bottom: 20px;
     }
 
     .vis-medium {
@@ -98,7 +97,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 30px;
-      margin-bottom: 50px;
+      margin-bottom: 20px;
     }
 
     .split .column:first-child {
@@ -144,7 +143,7 @@
       padding-top: 40px;
     }
 
-    section#australia h2 {
+    h2 {
       color: var(--primary);
       font-size: 1.7rem;
       margin-bottom: 15px;
@@ -152,16 +151,16 @@
       padding-bottom: 8px;
     }
 
-    section#australia p {
-      max-width: 800px;
-      margin-bottom: 20px;
+    p {
+      max-width: 100%;
+      margin-bottom: 25px;
     }
 
     footer {
       text-align: center;
       color: var(--text-muted);
       border-top: 2px solid var(--border);
-      padding-top: 25px;
+      padding-top: 15px;
       font-size: 0.9rem;
     }
 
@@ -212,6 +211,11 @@
 
   <section>
     <h2>Global Life Expectancy Overview</h2>
+    <p>
+      The choropleth map highlights life expectancy worldwide. Darker blues indicate higher values, 
+      while grey areas represent missing data. Australia and Western Europe consistently appear 
+      among the top-performing regions from 2011–2020.
+    </p>
     <div class="vis-container vis-large" id="world-map"></div>
   </section>
 
@@ -235,22 +239,50 @@
   <section id="australia">
     <h2>Life Expectancy Across Australian States and Territories</h2>
     <p>
-      The map and line chart below show life expectancy across Australian states and
-      territories. Use the year selector on the left to explore changes across the map,
-      and use the dropdown on the right to view detailed state trends or the national average.
+      The chart below shows life expectancy trends across Australian states and territories 
+      from 2011 to 2020.
+    </p>
+    <div class="vis-container vis-large" id="australia-state-line"></div>
+    <p>
+      The chart shows a <strong>steady rise</strong> in life expectancy across most Australian states and territories 
+      from 2011 to 2020. Overall, Australia’s health outcomes continue to improve year by year, 
+      with the Australian Capital Territory and Victoria maintaining the <strong>highest averages above 83 years</strong>. 
+      However, the Northern Territory lags behind the rest of the country — remaining below 80 years on average. 
+      This gap can be linked to factors such as <strong>limited healthcare access, higher rural and Indigenous populations, 
+      and socioeconomic inequalities</strong>. Let’s explore the next visualisations to understand how health spending 
+      and funding sources contribute to these differences.
+    </p>
+  </section>
+
+  <!-- ===== ADDITIONAL VISUALISATIONS SECTION ===== -->
+  <section id="additional">
+    <h2>Health Expenditure in Australia</h2>
+    <p>
+      Here are two visualisations that shows the health expenditure on each states and where the funds are coming from
     </p>
 
     <div class="split">
       <div class="column">
-        <h3>Life Expectancy by State (Map)</h3>
-        <div class="vis-container vis-medium" id="australia-state-map"></div>
+        <h3>Health Expenditure</h3>
+        <div class="vis-container vis-medium" id="extra-vis-1"></div>
       </div>
 
       <div class="column">
-        <h3>Life Expectancy Trends (2011–2020)</h3>
-        <div class="vis-container vis-medium" id="australia-state-line"></div>
+        <h3>Funding Source</h3>
+        <div class="vis-container vis-medium" id="extra-vis-2"></div>
       </div>
     </div>
+
+    <p>
+      The health expenditure chart highlights clear funding disparities between states and territories. 
+      New South Wales and Victoria receive the <strong>highest health spending</strong>, while the Northern Territory 
+      consistently shows the <strong>lowest expenditure</strong>, aligning with its <strong>lower life expectancy</strong> trend observed earlier. 
+      This suggests a possible correlation between total funding and health outcomes. 
+      On the right, the funding source breakdown shows that most health expenditure is financed by government sources, 
+      particularly the Australian Government and state governments. In contrast, non-government contributions — 
+      such as health insurance funds and individual spending — make up a smaller proportion, 
+      illustrating Australia’s <strong>strong public healthcare funding</strong> structure.
+    </p>
   </section>
 
   <!-- ===== MEAN TEMPERATURE SECTION ===== -->
@@ -262,21 +294,50 @@
       warming trend in recent decades.
     </p>
     <div class="vis-container vis-large" id="australia-temp-vis"></div>
+
+    <p>
+      Over the past decade, Australia’s mean temperature has <strong>increased by 1°C</strong>, 
+      reflecting a steady warming trend that aligns with global climate change patterns. 
+      This rise in temperature can have direct and indirect effects on health outcomes — 
+      increasing the frequency of <strong>heat-related illnesses, dehydration, and cardiovascular stress</strong>, 
+      particularly among vulnerable populations such as the elderly and those in rural or remote regions. 
+      As Australia continues to experience hotter and more <strong>extreme conditions</strong>, it raises an important question: 
+      <strong>how long can life expectancy continue to rise if climate-related health risks become more prevalent?</strong> 
+      The data suggests that while medical and healthcare improvements have boosted longevity, 
+      environmental challenges may increasingly offset these gains in the coming decades.
+    </p>
   </section>
 
   <footer>
-    <p>FIT3179 Data Visualisation 2 Assignment | Created by Kent Ferio | October 2025</p>
+    <p>FIT3179 - Data Visualisation (Assignment 2) | Visualisation created by <strong>Kent Eagan Ferio</strong> | Last updated 21st October 2025</p>
+      <div>
+    <p>Data comes from official statistical agencies (WBG, ABS, AIHW).</p>
+      <p><strong>Data sources:</strong></p>
+          <a href="https://data.worldbank.org/indicator/SP.DYN.LE00.IN?name_desc=false" target="_blank">
+            Global Life Expectancy (World Bank Group)
+          </a>
+          , <a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.CD?name_desc=false" target="_blank">
+            GDP per capita (World Bank Group)
+          </a>
+          , <a href="https://www.abs.gov.au/statistics/people/population/life-expectancy/latest-release" target="_blank">
+            Australia Life Expectancy by State (ABS)
+          </a>
+          , <a href="https://www.abs.gov.au/statistics/people/population/life-expectancy/latest-release" target="_blank">
+            Australia Life Expectancy by State (ABS)
+          </a>
+          , <a href="https://www.aihw.gov.au/" target="_blank">
+            Australia Health Expenditure (AIHW)
+          </a>
   </footer>
 
   <script>
     vegaEmbed("#world-map", "life_expectancy_map.json");
     vegaEmbed("#gdp-scatter", "gdp_scatter_plot.json");
-    vegaEmbed("#australia-state-map", "states_life_expectancy.json");
     vegaEmbed("#australia-state-line", "states_life_expectancy_line.json");
     vegaEmbed("#australia-temp-vis", "australia_mean_temperature.json");
+    vegaEmbed("#extra-vis-1", "health_expenditure_states.json");
+    vegaEmbed("#extra-vis-2", "health_expenditure_funding.json");
   </script>
-
-
 
 </body>
 </html>
