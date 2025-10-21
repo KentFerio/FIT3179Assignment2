@@ -1,0 +1,88 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 260,
+
+  "data": {
+    "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_health_expenditure_by_state.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "Year": "number",
+        "Expenditure": "number"
+      }
+    }
+  },
+
+  "params": [
+    {
+      "name": "yearSelector",
+      "value": 2020,
+      "bind": {
+        "input": "select",
+        "options": [2011,2012,2013,2014,2015,2016,2017,2018,2019,2020],
+        "name": "Select Year: "
+      }
+    }
+  ],
+
+  "transform": [
+    { "filter": "datum.Year == yearSelector" },
+    { "calculate": "datum.Expenditure / 1e9", "as": "ExpenditureBillions" }
+  ],
+
+  "mark": { "type": "bar", "cornerRadiusTopLeft": 3, "cornerRadiusTopRight": 3 },
+
+  "encoding": {
+    "x": {
+      "field": "State",
+      "type": "nominal",
+      "title": "State / Territory",
+      "axis": { "labelAngle": -40 }
+    },
+    "y": {
+      "field": "ExpenditureBillions",
+      "type": "quantitative",
+      "title": "Health Expenditure ($B AUD)",
+      "scale": { "zero": false },
+      "axis": { "format": ".1f" }
+    },
+    "color": {
+      "field": "State",
+      "type": "nominal",
+      "legend": null,
+      "scale": {
+        "domain": [
+          "New South Wales",
+          "Victoria",
+          "Queensland",
+          "South Australia",
+          "Western Australia",
+          "Tasmania",
+          "Northern Territory",
+          "Australian Capital Territory"
+        ],
+        "range": [
+          "blue",
+          "orange",
+          "green",
+          "red",
+          "pink",
+          "purple",
+          "cyan",
+          "brown"
+        ]
+      }
+    },
+    "tooltip": [
+      { "field": "State", "title": "State / Territory" },
+      { "field": "ExpenditureBillions", "title": "Expenditure ($B AUD)", "format": ".2f" },
+      { "field": "Year", "title": "Year" }
+    ]
+  },
+
+  "config": {
+    "view": { "stroke": "transparent" },
+    "background": "white"
+  }
+}

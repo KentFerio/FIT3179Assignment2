@@ -1,0 +1,101 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "width": "container",
+  "height": 400,
+
+  "data": {
+    "url": "https://raw.githubusercontent.com/KentFerio/FIT3179Assignment2/refs/heads/main/A2_states_life_expectancy.csv",
+    "format": {"type": "csv"}
+  },
+
+  "params": [
+    {
+      "name": "stateSelector",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All",
+          "New South Wales",
+          "Victoria",
+          "Queensland",
+          "South Australia",
+          "Western Australia",
+          "Tasmania",
+          "Northern Territory",
+          "Australian Capital Territory"
+        ],
+        "name": "Select State: "
+      }
+    }
+  ],
+
+  "transform": [
+    {
+      "filter": "datum.States != null && datum.States != ''"
+    },
+    {
+      "filter": "stateSelector == 'All' || datum.States == stateSelector"
+    },
+    {
+      "fold": [
+        "2011","2012","2013","2014","2015",
+        "2016","2017","2018","2019","2020"
+      ],
+      "as": ["Year","LifeExpectancy"]
+    }
+  ],
+
+  "mark": {"type": "line", "point": true},
+
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year"
+    },
+    "y": {
+      "field": "LifeExpectancy",
+      "type": "quantitative",
+      "title": "Life Expectancy (years)",
+      "scale": {"domain": [76, 86]}
+    },
+    "color": {
+      "field": "States",
+      "type": "nominal",
+      "title": "State/Territory",
+      "scale": {
+        "domain": [
+          "New South Wales",
+          "Victoria",
+          "Queensland",
+          "South Australia",
+          "Western Australia",
+          "Tasmania",
+          "Northern Territory",
+          "Australian Capital Territory"
+        ],
+        "range": [
+          "blue", 
+          "orange", 
+          "green", 
+          "red",
+          "pink", 
+          "purple", 
+          "cyan",  
+          "brown"  
+        ]
+      }
+    },
+    "tooltip": [
+      {"field": "States", "title": "State"},
+      {"field": "Year"},
+      {"field": "LifeExpectancy", "title": "Life Expectancy", "format": ".1f"}
+    ]
+  },
+
+  "config": {
+    "background": "white",
+    "view": {"stroke": "transparent"}
+  }
+}
