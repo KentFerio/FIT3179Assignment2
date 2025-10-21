@@ -39,7 +39,7 @@
 
   "layer": [
     {
-      "mark": {"type": "arc", "innerRadius": 0, "outerRadius": 40, "color": "#e0e0e0"},
+      "mark": {"type": "arc", "innerRadius": 0, "outerRadius": 40, "color": "lightgray"},
       "encoding": {
         "theta": {"aggregate": "sum", "field": "Value ($billion)"},
         "tooltip": [
