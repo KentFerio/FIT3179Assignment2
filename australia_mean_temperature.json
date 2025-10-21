@@ -10,7 +10,7 @@
     {
       "mark": {
         "type": "line",
-        "color": "#e67e22",
+        "color": "orange",
         "strokeWidth": 2
       },
       "encoding": {
@@ -39,7 +39,7 @@
     {
       "mark": {
         "type": "rule",
-        "color": "#999",
+        "color": "grey",
         "strokeDash": [4, 4]
       },
       "encoding": {
@@ -49,7 +49,7 @@
     {
       "mark": {
         "type": "line",
-        "color": "#c0392b",
+        "color": "orangered",
         "strokeDash": [5, 5],
         "opacity": 0.7
       },
